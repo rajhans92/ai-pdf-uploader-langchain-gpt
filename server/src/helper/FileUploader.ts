@@ -13,8 +13,24 @@ const storage = multer.diskStorage({
   },
 });
 
+const allowedExtensions = ['.pdf', '.docx'];
+
+const fileFilter = (
+  _req: Express.Request,
+  file: Express.Multer.File,
+  cb: multer.FileFilterCallback
+) => {
+  const ext = path.extname(file.originalname).toLowerCase();
+  if (allowedExtensions.includes(ext)) {
+    cb(null, true);
+  } else {
+    cb(new Error(`Only ${allowedExtensions.join(', ')} files are allowed`));
+  }
+};
+
 // Multer middleware
 export const upload = multer({
   storage: storage,
+  fileFilter: fileFilter,
   limits: { fileSize: 100 * 1024 * 1024 }, // Max file size: 100MB
 });
