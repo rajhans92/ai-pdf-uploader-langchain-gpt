@@ -14,7 +14,7 @@ class AiChatHelper{
     }
     
 
-    public async llmPdfUploaderChat(messagesHistory: Array<{role: string, content: string}>){
+    public async callModel(messagesHistory: Array<{role: string, content: string}>){
         let messageArr:Array<{role: string, content: string}> = [
             { role: "system", content: "Your are a good AI assistent!" }
         ];

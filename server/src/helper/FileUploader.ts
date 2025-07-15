@@ -1,6 +1,7 @@
 import multer from 'multer';
 import path from 'path';
 
+console.log("Error in llmPdfUploaderChat: 11"); 
 // Configure storage
 const storage = multer.diskStorage({
   destination: function (_req, _file, cb) {

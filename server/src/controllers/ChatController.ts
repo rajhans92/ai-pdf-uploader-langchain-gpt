@@ -11,10 +11,14 @@ class ChatController{
         this.llmPdfUploaderChat = this.llmPdfUploaderChat.bind(this);
     }
 
-    public async llmPdfUploaderChat(req: Request, res: Response, next: NextFunction){
-        try{
-            
-            
+    public async llmPdfUploaderChat(req: any, res: Response, next: NextFunction){
+        try{ 
+            res.json({
+                message: 'File uploaded successfully',
+                filename: req.file.filename,
+                originalname: req.file.originalname,
+                path: req.file.path,
+              });
         }catch(error: unknown){            
             next(error);
         }

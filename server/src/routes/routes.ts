@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { upload } from '../helper/FileUploader';
 import ChatController from "../controllers/ChatController";
 
 class Routers{
@@ -12,7 +13,7 @@ class Routers{
     }
 
     private initRoutes(){
-        this.router.post("/chat/pdfUploader",this.chatController.llmPdfUploaderChat);
+        this.router.post("/chat/pdfUploader",upload.single('doc'),this.chatController.llmPdfUploaderChat);
     }
 }
 

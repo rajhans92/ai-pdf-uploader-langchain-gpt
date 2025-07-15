@@ -16,7 +16,8 @@ class ErrorHandler {
     if (process.env.NODE_ENV === 'dev') {
         console.error(error.stack);
     }
-
+    console.log("error ==> ",error);
+    
     // Return a standardized error response
     res.status(statusCode).json({
         status: 'error',
