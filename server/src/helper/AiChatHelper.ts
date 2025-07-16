@@ -12,7 +12,7 @@ class AiChatHelper {
   private readonly embeddings: OpenAIEmbeddings;
   private taggingPrompt: ChatPromptTemplate | null;
   private prompt: string | null;
-  private llmWihStructuredOutput: any;
+  private llmWihStructuredOutput: any | null;
 
   constructor() {
     this.model = new ChatOpenAI({
@@ -23,7 +23,11 @@ class AiChatHelper {
     this.embeddings = new OpenAIEmbeddings();
     this.taggingPrompt = null;
     this.prompt = null;
+    this.llmWihStructuredOutput = null;
+    this.classificationFunction();
+  }
 
+  private classificationFunction() {
     const classificationSchema = z.object({
       ATS_Rating: z.number().describe("Provide the ATS rating of the resum in scale of 1 to 10"),
       name: z.string().describe("Extract the name of the candidate from the resume"),
@@ -44,11 +48,16 @@ class AiChatHelper {
       ) as any;
   }
 
+
   private async promptTemplate(docs: Document[]): Promise<void> {
     this.taggingPrompt = ChatPromptTemplate.fromTemplate(
       `Extract the desired information from the following passage. This is user's resume/cv for job interview.
 
         Only extract the properties mentioned in the 'Classification' function.
+
+        If data fomate is not available, then return null in all the properties.
+
+        this process should be run for 1 minute, if you are not able to extract the data in 1 minute then return null in all the properties.
 
         Passage:
         {input}
