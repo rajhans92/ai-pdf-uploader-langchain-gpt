@@ -51,17 +51,19 @@ class AiChatHelper {
 
   private async promptTemplate(docs: Document[]): Promise<void> {
     this.taggingPrompt = ChatPromptTemplate.fromTemplate(
-      `Extract the desired information from the following passage. This is user's resume/cv for job interview.
+     `You are an intelligent information extraction assistant.
 
-        Only extract the properties mentioned in the 'Classification' function.
+      Your task is to extract structured information from a resume or CV text provided in the input field.
 
-        If data fomate is not available, then return null in all the properties.
+      ### Rules:
+      1. Only extract the properties listed in the 'Classification' function.
+      2. If any data is missing, unclear, or not in an extractable format, return \`null\` for that property.
+      3. If extraction takes longer than 1 minute, return \`null\` for all properties.
+      4. Output must strictly match the format of the 'Classification' function as a JSON object.
+      5. Do not infer or guess data — only use what is explicitly mentioned.
 
-        this process should be run for 1 minute, if you are not able to extract the data in 1 minute then return null in all the properties.
-
-        Passage:
-        {input}
-        `   
+      ### Input:
+      {input}`   
     );
 
     const result = await this.taggingPrompt.invoke({
@@ -92,10 +94,42 @@ class AiChatHelper {
     }
 
     const messages = [new HumanMessage(this.prompt!)];
-    const result = await this.llmWihStructuredOutput.invoke(messages);
 
-    console.log("Parsed Resume Result =>", result);
-    return "test";
+    // Add a 60-second timeout logic
+    const TIMEOUT_MS = 60000;
+
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("GPT response timeout")), TIMEOUT_MS)
+    );
+    let parsing = false;
+    let result: any = null;
+    try {
+        result = await Promise.race([
+        this.llmWihStructuredOutput.invoke(messages),
+        timeoutPromise
+      ]);
+      parsing = true;
+      return {parsing,result,filePath, fileExtension};
+    } catch (err) {
+      return {parsing,result};
+    }finally{
+      this.deleteFile(filePath);
+    }
+
+  }
+
+  private async deleteFile(filePath: string) {
+    const TEN_MINUTES = 10 * 60 * 1000; // 600000 ms
+
+    setTimeout(async () => {
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.error("Error deleting file:", err);
+          } else {
+            console.log("File deleted successfully:", filePath);
+          }
+        });
+      }, TEN_MINUTES);
   }
 
   public async callModel(messagesHistory: Array<{ role: string; content: string }>): Promise<string> {

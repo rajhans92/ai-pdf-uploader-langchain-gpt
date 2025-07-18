@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import AiChatHelper from "../helper/AiChatHelper"; 
 import path from "path";
+import fs from "fs";
 import { profile } from "console";
 
 class ChatController{
@@ -9,7 +10,29 @@ class ChatController{
 
     constructor(){
         this.aiChatHelperObj = new AiChatHelper();
+        this.deleteFolder("tempFolder/");
+        this.createTempFolder("tempFolder")
         this.llmPdfUploaderChat = this.llmPdfUploaderChat.bind(this);
+    }
+
+    private createTempFolder(folderName: string) {
+        // const tempFolderPath = path.join(__dirname, folderName);
+        if (!fs.existsSync(folderName)) {
+            fs.mkdirSync(folderName);
+            console.log("Temporary folder created:", folderName);
+        } else {
+            console.log("Temporary folder already exists:", folderName);
+        }
+    }
+
+    private async deleteFolder(filePath: string) {
+        
+        fs.rmSync(filePath, { recursive: true, force: true })
+        if (!fs.existsSync(filePath)) {
+            console.error("Error deleting folder ");
+        } else {
+            console.log("Folder deleted");
+        }
     }
 
     public async llmPdfUploaderChat(req: any, res: Response, next: NextFunction){
@@ -32,8 +55,7 @@ class ChatController{
             // Process the file (e.g., pass it to your helper)
             const respData = await this.aiChatHelperObj.llmPdfUploaderChat(req.file.path,fileExtension).then((data) => {return data});
             res.json({
-                fileName: req.file.filename,
-                merssage: respData
+                respData
             });
         }catch(error: unknown){            
             next(error);
