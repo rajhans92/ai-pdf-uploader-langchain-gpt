@@ -10,9 +10,10 @@ class ChatController{
 
     constructor(){
         this.aiChatHelperObj = new AiChatHelper();
-        this.deleteFolder("tempFolder/");
-        this.createTempFolder("tempFolder")
+        // this.deleteFolder("tempFolder/");
+        // this.createTempFolder("tempFolder")
         this.llmPdfUploaderChat = this.llmPdfUploaderChat.bind(this);
+        this.llmChat = this.llmChat.bind(this);
     }
 
     private createTempFolder(folderName: string) {
@@ -62,6 +63,39 @@ class ChatController{
         }
     }
 
+    public async llmChat(req: Request, res: Response, next: NextFunction){
+        try{
+            
+            // Check if req.file exists
+            if (!req.body.filePath) {
+                return res.status(400).json({ message: "No file uploaded" });
+            }
+
+            if (!fs.existsSync(req.body.filePath)) {
+                return res.status(400).json({ message: "No Such File available" });
+            } 
+
+            // Get the file extension
+            const fileExtension:  string = path.extname(req.body.filePath).toLowerCase();
+            console.log("File extension:", fileExtension);
+
+            // Example: Validate file extension
+            const allowedExtensions = [".pdf", ".docx"];
+            if (!allowedExtensions.includes(fileExtension)) {
+                return res.status(400).json({ message: `Invalid file type. Only ${allowedExtensions.join(", ")} are allowed.` });
+            }
+
+
+            let messagesHistory: Array<{ role: string, content: string }> = req.body.messagesHistory || [];
+            let filePath: string = req.body.filePath || "";
+            
+            const responseObj = await this.aiChatHelperObj.callModel(messagesHistory,filePath,fileExtension).then((data) => {return data});
+            
+            res.status(200).json({system: responseObj});
+        }catch(error: unknown){            
+            next(error);
+        }
+    }
 }
 
 export default ChatController;

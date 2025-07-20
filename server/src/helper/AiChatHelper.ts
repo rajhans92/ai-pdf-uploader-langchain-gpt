@@ -49,7 +49,7 @@ class AiChatHelper {
   }
 
 
-  private async promptTemplate(docs: Document[]): Promise<void> {
+  private async promptDocTemplate(docs: Document[]): Promise<void> {
     this.taggingPrompt = ChatPromptTemplate.fromTemplate(
      `You are an intelligent information extraction assistant.
 
@@ -73,7 +73,25 @@ class AiChatHelper {
     this.prompt = result.toString();
   }
 
-  public async llmPdfUploaderChat(filePath: string, fileExtension: string): Promise<any> {
+  private async promptChatTemplate(docs: Document[]): Promise<void> {
+    this.taggingPrompt = ChatPromptTemplate.fromTemplate(
+     `You are an intelligent information extraction assistant.
+
+      Your task is to read information from a resume or CV text provided in the input field.
+      and answer the questions based on the information provided.
+      
+      ### Input:
+      {input}`   
+    );
+
+    const result = await this.taggingPrompt.invoke({
+      input: docs.map((doc: Document) => doc.pageContent).join("\n"),
+    });
+
+    this.prompt = result.toString();
+  }
+
+  private async docToText(filePath: string, fileExtension: string) {
     let docs: Document[] = [];
 
     if (fileExtension === ".pdf") {
@@ -87,7 +105,13 @@ class AiChatHelper {
       throw new Error("Unsupported file type");
     }
 
-    await this.promptTemplate(docs);
+    await this.promptDocTemplate(docs);
+
+  }
+
+  public async llmPdfUploaderChat(filePath: string, fileExtension: string): Promise<any> {
+
+    await this.docToText(filePath, fileExtension);
 
     if (!this.prompt) {
       throw new Error("Prompt not generated");
@@ -101,6 +125,7 @@ class AiChatHelper {
     const timeoutPromise = new Promise((_, reject) =>
       setTimeout(() => reject(new Error("GPT response timeout")), TIMEOUT_MS)
     );
+
     let parsing = false;
     let result: any = null;
     try {
@@ -109,11 +134,11 @@ class AiChatHelper {
         timeoutPromise
       ]);
       parsing = true;
-      return {parsing,result,filePath, fileExtension};
+      return {parsing,result,filePath};
     } catch (err) {
       return {parsing,result};
     }finally{
-      this.deleteFile(filePath);
+      // this.deleteFile(filePath);
     }
 
   }
@@ -132,14 +157,32 @@ class AiChatHelper {
       }, TEN_MINUTES);
   }
 
-  public async callModel(messagesHistory: Array<{ role: string; content: string }>): Promise<string> {
+  public async callModel(messagesHistory: Array<{ role: string; content: string }>,filePath: string, fileExtension: string) {
     const messageArr: Array<{ role: string; content: string }> = [
       { role: "system", content: "You are a good AI assistant!" },
       ...messagesHistory,
     ];
 
+    let docs: Document[] = [];
+
+    if (fileExtension === ".pdf") {
+      const loader = new PDFLoader(filePath);
+      docs = await loader.load();
+    } else if (fileExtension === ".docx") {
+      const buffer = fs.readFileSync(filePath);
+      const result = await mammoth.extractRawText({ buffer });
+      docs = [new Document({ pageContent: result.value })];
+    } else {
+      throw new Error("Unsupported file type");
+    }
+
+    await this.promptChatTemplate(docs);
+
+    const messages = [new HumanMessage(this.prompt!)];
+    messages.push(...messageArr.map(msg => new HumanMessage(msg.content)));
+
     const result = await this.model.invoke(messageArr);
-    return "test";
+    return result.content;
   }
 }
 

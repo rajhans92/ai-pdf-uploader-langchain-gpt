@@ -14,6 +14,7 @@ class Routers{
 
     private initRoutes(){
         this.router.post("/chat/pdfUploader",upload.single('doc'),this.chatController.llmPdfUploaderChat);
+        this.router.post("/chat/llmChat",this.chatController.llmChat);
     }
 }
 
