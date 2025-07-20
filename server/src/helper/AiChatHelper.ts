@@ -12,7 +12,7 @@ class AiChatHelper {
   private readonly embeddings: OpenAIEmbeddings;
   private taggingPrompt: ChatPromptTemplate | null;
   private prompt: string | null;
-  private llmWihStructuredOutput: any | null;
+  private llmWithStructuredOutput: any | null;
 
   constructor() {
     this.model = new ChatOpenAI({
@@ -23,7 +23,7 @@ class AiChatHelper {
     this.embeddings = new OpenAIEmbeddings();
     this.taggingPrompt = null;
     this.prompt = null;
-    this.llmWihStructuredOutput = null;
+    this.llmWithStructuredOutput = null;
     this.classificationFunction();
   }
 
@@ -42,7 +42,7 @@ class AiChatHelper {
       suggestions: z.string().describe("Provide suggestions to improve the resume"),
     });
 
-    this.llmWihStructuredOutput = this.model.withStructuredOutput(
+    this.llmWithStructuredOutput = this.model.withStructuredOutput(
         classificationSchema as any,
         { name: "extractor" }
       ) as any;
@@ -130,7 +130,7 @@ class AiChatHelper {
     let result: any = null;
     try {
         result = await Promise.race([
-        this.llmWihStructuredOutput.invoke(messages),
+        this.llmWithStructuredOutput.invoke(messages),
         timeoutPromise
       ]);
       parsing = true;
