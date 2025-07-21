@@ -40,14 +40,7 @@ export default function FileUpload() {
 
     return (
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-2">
-            {/* <span>Rupesh AI - </span>  */}
-            <span className="text-[#145a32]">Rupesh AI (Resume Analyzer)</span> 
-          </h1>
 
-          <p className="text-sm text-[#145a32] mb-6">
-              You can check your resume ATS score free and chat with AI to improve your ATS score
-          </p>
           <div className="flex items-center justify-center">
               <div className="bg-[#d4efdf] p-6 rounded-2xl shadow-lg w-sm">
                     <div className="flex items-center justify-center mt-6">

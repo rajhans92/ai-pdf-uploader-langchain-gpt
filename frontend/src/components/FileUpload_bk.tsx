@@ -39,15 +39,7 @@ export default function FileUpload() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6">
-      <h1 className="text-5xl font-bold text-pink-600">
-        Resume Analyzer <span className="text-gray-800">by Rupesh AI</span>
-     </h1>
-
-      <p className="text-md md:text-lg text-pink-500 mb-10 text-center max-w-xl">
-        You can check your resume ATS score free and chat with AI to improve your ATS score
-      </p>
-
-
+ 
       <div className="bg-pink-50 border border-pink-200 rounded-2xl p-8 shadow-lg w-full max-w-md flex flex-col items-center">
 
         <div className="border-2 border-dashed border-pink-400 rounded-2xl p-8 shadow-lg bg-white max-w-md mx-auto text-center hover:border-pink-600 transition">
