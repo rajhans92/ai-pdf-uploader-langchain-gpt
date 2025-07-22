@@ -10,8 +10,8 @@ class ChatController{
 
     constructor(){
         this.aiChatHelperObj = new AiChatHelper();
-        // this.deleteFolder("tempFolder/");
-        // this.createTempFolder("tempFolder")
+        this.deleteFolder("tempFolder/");
+        this.createTempFolder("tempFolder")
         this.llmPdfUploaderChat = this.llmPdfUploaderChat.bind(this);
         this.llmChat = this.llmChat.bind(this);
     }

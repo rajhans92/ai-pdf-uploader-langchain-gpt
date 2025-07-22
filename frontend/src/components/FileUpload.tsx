@@ -35,8 +35,15 @@ export default function FileUpload({setFileUploaded, setResumeData}:Props) {
           });
     
           const data = await res.json();
-          setFileUploaded(false);
-          setMessage(data.message || "Uploaded successfully!");
+
+          if(data.respData.parsing) {
+            setResumeData(data.respData);
+            setFileUploaded(false);
+            setMessage(data.message || "Uploaded successfully!");
+          }else{
+            setMessage("Upload failed.");
+          }
+
         } catch (error) {
           setMessage("Upload failed.");
         } finally {
