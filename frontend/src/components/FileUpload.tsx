@@ -2,7 +2,12 @@
 
 import { useState } from "react"
 
-export default function FileUpload() {
+type Props = {
+  setResumeData: React.Dispatch<React.SetStateAction<any>>;
+  setFileUploaded: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export default function FileUpload({setFileUploaded, setResumeData}:Props) {
 
     const [file, setFile] = useState<File | null>(null)
     const [uploading, setUploading] = useState(false)
@@ -30,6 +35,7 @@ export default function FileUpload() {
           });
     
           const data = await res.json();
+          setFileUploaded(false);
           setMessage(data.message || "Uploaded successfully!");
         } catch (error) {
           setMessage("Upload failed.");
