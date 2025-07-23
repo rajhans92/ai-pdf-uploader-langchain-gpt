@@ -7,8 +7,19 @@ import FilePreviewer from "@/components/FilePreviewer";
 
 export default function Home() {
 
-  const [fileUploaded, setFileUploaded] = useState(false);
-  const [resumeData, setResumeData] = useState();
+  const [fileUploaded, setFileUploaded] = useState(true);
+  const [resumeData, setResumeData] = useState({});
+  const [fileViewer, setFileViewer] = useState("");
+  const [htmlContent, setHtmlContent] = useState("");
+  const [fileType, setFileType] = useState(false);
+
+  const clearHandler = () => {
+    setFileUploaded(true);
+    setResumeData({});
+    setFileViewer("");
+    setHtmlContent("");
+    setFileType(false);
+  };
 
 
   return (
@@ -26,7 +37,7 @@ export default function Home() {
             </p>
           </div>
           <div className="flex items-center justify-center mt-16">
-            <FileUpload setFileUploaded={setFileUploaded} setResumeData={setResumeData} />
+            <FileUpload setFileUploaded={setFileUploaded} setResumeData={setResumeData} setFileViewer={setFileViewer} setHtmlContent={setHtmlContent} setFileType={setFileType}/>
           </div>
         </div>
       )
@@ -34,14 +45,14 @@ export default function Home() {
           <div className="bg-[#ebf3f1] h-screen grid grid-cols-2">
             <div className="">
               <div className="">
-                <FilePreviewer />
+                <FilePreviewer fileViewer={fileViewer} htmlContent={htmlContent} fileType={fileType}/>
               </div>
             </div>
             <div className="p-8">
             <div className="flex items-center justify-between border-b-4 border-[#145a32] pb-4 mb-6">
                 {/* Back Button */}
                 <button
-                  onClick={() => setFileUploaded(true)}
+                  onClick={clearHandler}
                   className="bg-[#145a32] cursor-pointer hover:bg-[#599874] text-white text-xs font-medium py-2 px-6 rounded-2xl"
                 >
                   Back
