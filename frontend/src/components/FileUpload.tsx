@@ -1,13 +1,17 @@
 "use client";
 
+import mammoth from "mammoth";
 import { useState } from "react"
 
 type Props = {
   setResumeData: React.Dispatch<React.SetStateAction<any>>;
   setFileUploaded: React.Dispatch<React.SetStateAction<boolean>>;
+  setFileViewer:React.Dispatch<React.SetStateAction<any>>;
+  setHtmlContent: React.Dispatch<React.SetStateAction<string>>;
+  setFileType: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function FileUpload({setFileUploaded, setResumeData}:Props) {
+export default function FileUpload({setFileUploaded, setResumeData, setFileViewer, setHtmlContent, setFileType}:Props) {
 
     const [file, setFile] = useState<File | null>(null)
     const [uploading, setUploading] = useState(false)
@@ -15,6 +19,22 @@ export default function FileUpload({setFileUploaded, setResumeData}:Props) {
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files?.length) {
+            if (e.target.files[0].type == 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                const reader = new FileReader();
+
+                reader.onload = async function (event) {
+                  const result = event.target?.result;
+                  if (result instanceof ArrayBuffer) {
+                    const htmlResult = await mammoth.convertToHtml({ arrayBuffer: result });
+                    setHtmlContent(htmlResult.value); // HTML string
+                  }
+                };
+            
+                reader.readAsArrayBuffer(e.target.files[0]);
+                setFileType(true);
+            }else{
+              setFileViewer(URL.createObjectURL(e.target.files[0]));
+            }
             setFile(e.target.files[0]);
             setMessage("");
         }
