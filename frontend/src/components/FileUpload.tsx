@@ -60,13 +60,14 @@ export default function FileUpload({setFileUploaded, setResumeData}:Props) {
                         <input type="file" onChange={handleFileChange} accept=".pdf,.docx" disabled={uploading} name="small-file-input" id="small-file-input" className="block w-full border border-[#7dcea0] shadow-sm rounded-lg text-sm focus:z-10 focus:border-[#145a32] focus:ring-[#145a32] disabled:opacity-50 disabled:pointer-events-none dark:bg-[#7dcea0] dark:border-[#7dcea0] dark:text-[#145a32]
                           file:bg-[#145a32] file:border-0
                           file:me-4
+                          cursor-pointer
                           file:py-2 file:px-4
                           dark:file:bg-[#145a32] dark:file:text-white" />
 
                       </label>
                     </div>
                     <div className="mt-4">
-                      <button onClick={handleUpload} disabled={uploading} className="bg-[#145a32] hover:bg-[#7dcea0 text-white text-md font-medium py-2 px-6 rounded-2xl mb-2">
+                      <button onClick={handleUpload} disabled={uploading} className="bg-[#145a32] cursor-pointer hover:bg-[#599874] text-white text-md font-medium py-2 px-6 rounded-2xl mb-2">
                         Upload
                       </button>
                         <div className="block text-[#145a32] text-sm font-bold min-h-[20px]"> {message && <p>{message}</p>} </div>
