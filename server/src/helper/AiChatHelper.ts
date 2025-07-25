@@ -37,7 +37,7 @@ class AiChatHelper {
       experience: z.string().describe("Extract the experience of the candidate from the resume"),
       education: z.string().describe("Extract the education of the candidate from the resume"),
       resume_rating: z.string().describe("Provide the overall rating of the resume based on ATS and other factors in scale of 1 to 10"),
-      weak_points: z.number().describe("Extract the weak points of the resume"),
+      weak_points: z.string().describe("Extract the weak points of the resume"),
       strong_points: z.string().describe("Extract the strong points of the resume"),
       suggestions: z.string().describe("Provide suggestions to improve the resume"),
     });
