@@ -7,6 +7,8 @@ import FilePreviewer from "@/components/FilePreviewer";
 
 export default function Home() {
 
+  const [chatMessages, setChatMessages] = useState("");
+  const [chatHistory, setChatHistory] = useState([]);
   const [fileUploaded, setFileUploaded] = useState(true);
   const [resumeData, setResumeData] = useState({
     result: {
@@ -87,7 +89,7 @@ export default function Home() {
                 <div style={{ width: '100px' }}></div>
               </div>
               <div className="max-h-[calc(100vh-200px)] overflow-y-auto px-4">
-                <div className="bg-white p-6 rounded-2xl shadow-lg space-y-6 border border-gray-200">
+                <div className="bg-white p-6 shadow-lg space-y-6 border border-gray-200">
 
                   {/* ATS Rating */}
                   <div>
@@ -147,12 +149,20 @@ export default function Home() {
               </div>
               {/* CTA Button */}
               <div className="flex justify-center">
-                <button
-                  onClick={clearHandler}
-                  className="bg-[#145a32] hover:bg-[#599874] text-white font-semibold py-3 px-6 rounded-full shadow-md transition-all w-full"
-                >
-                  Chat with AI for more suggestions
-                </button>
+                <div className="flex items-center justify-between mt-2 bg-[#7dcea0] border border-[#145a32] rounded-2xl px-4 py-2 shadow-md w-full">
+                  <input
+                    type="text"
+                    placeholder="Ask AI for resume suggestions..."
+                    value={chatMessages}
+                    onChange={(e) => setChatMessages(e.target.value)}
+                    className="flex-1 outline-none text-sm px-2 py-1 bg-transparent text-gray-800"
+                  />
+                  <button
+                    className="ml-3 bg-[#145a32] cursor-pointer hover:bg-[#599874] text-white px-4 py-2 rounded-xl text-sm transition-all duration-300"
+                  >
+                    <span className="text-xl">➤</span>
+                  </button>
+                </div>
               </div>
 
             </div>
