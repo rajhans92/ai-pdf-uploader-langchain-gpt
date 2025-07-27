@@ -109,26 +109,22 @@ export default function Home() {
                 >
                   Back
                 </button>
-
-                {/* Centered Heading */}
+ 
                 <h1 className="text-center flex-1">
                   <span className="text-xl font-bold text-[#145a32]">Rupesh AI </span><br></br> <span className="text-2xl font-bold text-[#145a32]"> Resume Analyzer </span>
                 </h1>
 
-                {/* Empty div to balance flex spacing */}
                 <div style={{ width: '100px' }}></div>
               </div>
               <div className="max-h-[calc(100vh-200px)] overflow-y-auto px-4">
                 <div className="bg-[#ddf1e6] p-6 shadow-lg space-y-6 border border-gray-200">
                   <div className="bg-white p-6 shadow-lg space-y-6 border rounded-2xl border-gray-200">
 
-                    {/* ATS Rating */}
                     <div>
                       <h2 className="text-lg font-semibold text-gray-700">Resume ATS Rating</h2>
                       <p className="text-green-600 text-2xl font-bold">{resumeData.result.ATS_Rating || "N/A"}</p>
                     </div>
 
-                    {/* Skills */}
                     <div>
                       <h2 className="text-lg font-semibold text-gray-700 mb-2">Skills</h2>
                       <div className="flex flex-wrap gap-2">
@@ -145,31 +141,26 @@ export default function Home() {
                       </div>
                     </div>
 
-                    {/* Experience */}
                     <div>
                       <h2 className="text-lg font-semibold text-gray-700 mb-1">Experience</h2>
                       <p className="text-gray-600">{resumeData.result.experience || "N/A"}</p>
                     </div>
 
-                    {/* Education */}
                     <div>
                       <h2 className="text-lg font-semibold text-gray-700 mb-1">Education</h2>
                       <p className="text-gray-600 whitespace-pre-line">{resumeData.result.education || "N/A"}</p>
                     </div>
 
-                    {/* Weak Points */}
                     <div>
                       <h2 className="text-lg font-semibold text-yellow-600 mb-1">Weak Points</h2>
                       <p className="text-gray-600">{resumeData.result.weak_points || "N/A"}</p>
                     </div>
 
-                    {/* Strong Points */}
                     <div>
                       <h2 className="text-lg font-semibold text-blue-600 mb-1">Strong Points</h2>
                       <p className="text-gray-600">{resumeData.result.strong_points || "N/A"}</p>
                     </div>
 
-                    {/* Suggestions */}
                     {resumeData.result.suggestions && (
                       <div>
                         <h2 className="text-lg font-semibold text-purple-600 mb-1">Suggestions</h2>
